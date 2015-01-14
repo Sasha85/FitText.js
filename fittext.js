@@ -5,21 +5,20 @@
 * Released under the WTFPL license 
 * http://sam.zoy.org/wtfpl/
 * Modified by Slawomir Kolodziej http://slawekk.info
-*
 * Modified by Aleksander Efremov
 */
 (function() {
-	var addEvent,
-		removeEvent,
-		resizeTimeout,
-		extend = function (obj, ext) {
-			for (var key in ext) {
-				if (ext.hasOwnProperty(key)) {
-					obj[key] = ext[key];
+	var	addEvent,
+			removeEvent,
+			resizeTimeout,
+			extend = function (obj, ext) {
+				for (var key in ext) {
+					if (ext.hasOwnProperty(key)) {
+						obj[key] = ext[key];
+					}
 				}
-			}
 
-			return obj;
+				return obj;
 		};
 
 	if (window.addEventListener) {	
