@@ -6,57 +6,69 @@
 * http://sam.zoy.org/wtfpl/
 * Modified by Slawomir Kolodziej http://slawekk.info
 *
-* Date: Tue Aug 09 2011 10:45:54 GMT+0200 (CEST)
+* Modified by Aleksander Efremov
 */
-(function(){
-  var css = function (el, prop) {
-    return window.getComputedStyle ? getComputedStyle(el).getPropertyValue(prop) : el.currentStyle[prop];
-  };
-  
-  var addEvent = function (el, type, fn) {
-    if (el.addEventListener)
-      el.addEventListener(type, fn, false);
-		else
-			el.attachEvent('on'+type, fn);
-  };
-  
-  var extend = function(obj,ext){
-    for(var key in ext)
-      if(ext.hasOwnProperty(key))
-        obj[key] = ext[key];
-    return obj;
-  };
+(function() {
+	var addEvent,
+		removeEvent,
+		resizeTimeout,
+		extend = function (obj, ext) {
+			for (var key in ext) {
+				if (ext.hasOwnProperty(key)) {
+					obj[key] = ext[key];
+				}
+			}
 
-  window.fitText = function (el, kompressor, options) {
+			return obj;
+		};
 
-    var settings = extend({
-      'minFontSize' : -1/0,
-      'maxFontSize' : 1/0
-    },options);
+	if (window.addEventListener) {	
+		addEvent = function (el, type, handler) {
+			el.addEventListener(type, handler);
+		};
+	} else {	
+		addEvent = function (el, type, handler) {
+			el.attachEvent("on" + type, handler);
+		};
+	}
 
-    var fit = function (el) {
-      var compressor = kompressor || 1;
+	window.fitText = function (el, compressor, options) {
+		var settings = extend({
+			minFontSize: -1 / 0,
+			maxFontSize: 1 / 0
+		}, options);
 
-      var resizer = function () {
-        el.style.fontSize = Math.max(Math.min(el.clientWidth / (compressor*10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
-      };
+		var fit = function (el) {
+			var compressor = compressor || 1;
 
-      // Call once to set.
-      resizer();
+			// Look at https://developer.mozilla.org/en-US/docs/Web/Events/resize
+			var resizer = function () {
+				if (resizeTimeout) return;
 
-      // Bind events
-      // If you have any js library which support Events, replace this part
-      // and remove addEvent function (or use original jQuery version)
-      addEvent(window, 'resize', resizer);
-    };
+				resizeTimeout = setTimeout(function () {
+					el.style.fontSize = Math.max(Math.min(el.clientWidth / (compressor * 10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
+					resizeTimeout = null;
+				}, 100);
+			};
 
-    if (el.length)
-      for(var i=0; i<el.length; i++)
-        fit(el[i]);
-    else
-      fit(el);
+			// Call once to set.
+			resizer();
 
-    // return set of elements
-    return el;
-  };
+			// Bind events
+			// If you have any js library which support Events, replace this part
+			// and remove addEvent function (or use original jQuery version)
+			addEvent(window, 'resize', resizer);
+		};
+
+		if (el.length) {
+			for(var i = 0; i < el.length; i++) {
+				fit(el[i]);
+			}
+		} else {				
+			fit(el);
+		}
+
+		// Return set of elements
+		return el;
+	};
 })();
