@@ -1,5 +1,5 @@
 /*!	
-* FitText.js 1.0 jQuery free version
+* FitText.js 1.1 jQuery free version
 *
 * Copyright 2011, Dave Rupert http://daverupert.com 
 * Released under the WTFPL license 
