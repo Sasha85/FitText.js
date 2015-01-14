@@ -47,7 +47,7 @@ window.fitText = function (el, compressor, options) {
             resizeTimeout = setTimeout(function () {
                 el.style.fontSize = Math.max(Math.min(el.clientWidth / (compressor * 10), parseFloat(settings.maxFontSize)), parseFloat(settings.minFontSize)) + 'px';
                 resizeTimeout = null;
-            }, 100);
+            }, 50);
         };
 
         // Call once to set.
